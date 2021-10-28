@@ -12,7 +12,7 @@ import json, re
 from django.http                import JsonResponse
 from django.views               import View
 from django.core.exceptions     import ValidationError
-from .utils                     import validate_email, validate_password
+# from .utils                     import validate_email, validate_password
 
 
 def home(request):
@@ -34,7 +34,7 @@ def signup(request):
             except ValidationError as e:
                 return JsonResponse({'MESSAGE':e.message}, status=404)
             user = User.objects.create_user(
-                    username=request.POST['mom_name']
+                    username=request.POST['mom_name'],
                     email=request.POST['email'],
                     mom_name=request.POST['mom_name'],
                     password=request.POST['password1'],
