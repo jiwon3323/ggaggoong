@@ -41,12 +41,13 @@ def signup(request):
                     baby_name=request.POST['baby_name'],
                     baby_gender=request.POST['baby_gender'],
                     baby_birth=request.POST.get('baby_birth'),
-                    phoneNumber=request.POST['phone_num'],
+                    phone=request.POST['phone_num'],
+                    address=request.POST['address'],
                     
                     )
             if user is not None:
                 auth.login(request, user)
-                return redirect('/users')
+                return redirect('/user/home')
     print("회원가입 안됨")
     return render(request, 'signup.html') 
 
