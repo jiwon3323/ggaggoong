@@ -16,52 +16,41 @@
     <nav>
         <div class="nav_wrapper">
             <a href="{% url 'home' %}" class="back" alt="back">뒤로</a>
-            <p href="#!" class="title">회원가입</p>
+            <p href="#!" class="title">호스트 회원가입</p>
         </div>
     </nav>
     <div class="container">
-        <form method="POST" action="{% url 'signup' %}">
+        <form method="POST" action="{% url 'host_signup' %}" enctype="multipart/form-data">
         {% csrf_token %}
         <div>
           <div>
-            <p class="heading">이름</p>
-            <textarea class="textbox" name="mom_name" id="" cols="30" rows="10" placeholder="이름 입력"></textarea>
+            <p class="heading">주민등록 번호</p>
+            <textarea class="textbox" name="id_card" id="" cols="30" rows="10" placeholder="주민등록 번호 입력"></textarea>
           </div>
           <div>
-            <p class="heading">이메일</p>
-            <textarea class="textbox" name="email" id="" cols="30" rows="10" placeholder="이메일 입력"></textarea>
+            <p class="heading">자격증 번호</p>
+            <textarea class="textbox" name="certificate_id" id="" cols="30" rows="10" placeholder="자격증 번호 입력"></textarea>
           </div>
     
           <div>
-            <p class="heading">비밀번호</p>
-            <input class="textbox" type='password' name="password1" id="" cols="30" rows="10" placeholder="비밀번호 입력 (5자리 이상)"></input>
-            <input class="textbox" type='password' name="password2" id="" cols="30" rows="10" placeholder="비밀번호 재입력"></input>
+            <p class="heading">범죄 기록부 업로드</p>
+            <input type='file' class="textbox" name="crimelog" id="" cols="30" rows="10" ></input>
             <br>
           </div>
 
           <div>
-            <p class="heading">애기 이름</p>
-            <textarea class="textbox" name="baby_name" id="" cols="30" rows="10" placeholder="애기 이름 입력"></textarea>
+            <p class="heading">범죄여부</p>
+            <input type="checkbox" name="crime_bool" value='False' id="" cols="30" rows="10" >범죄이력 없음</input>
+            <input type="checkbox" name="crime_bool" value='True' id="" cols="30" rows="10" >범죄이력 존재</input>
           </div>
           <div>
-            <p class="heading">애기 성별</p>
-            <input class='gender_button' type='checkbox' name='baby_gender' value='female'cols="30" rows="10" >여아 </input>
-            <input class='gender_button' type='checkbox' name='baby_gender' value='male' cols="30" rows="10">남아 </input>
+            <p class="heading">통장 사본</p>
+            <input type="file" name="bank_img" id="" cols="30" rows="10"></input>
           </div>
           <div>
-            <p class="heading">애기 생년월일</p>
-            <input type="date" name='baby_birth'>
-          </div>
-          <div>
-            <p class="heading">주소</p>
-            <textarea class="textbox" name="address" id="" cols="30" rows="10" placeholder="주소 입력"></textarea>
-          </div>
-          <div>
-            <p class="heading">전화번호</p>
-            <textarea class="textbox" name="phone_num" id="" cols="30" rows="10" placeholder="전화번호 입력"></textarea>
-          </div>
-
-        
+            <p class="heading">통장번호</p>
+            <textarea class="textbox" name="bank_num" id="" cols="30" rows="10" placeholder="통장번호 입력"></textarea>
+          </div>    
             <br><br>
         </div>
         <div style="text-align:center;">

@@ -1,6 +1,7 @@
 from django.shortcuts           import render
 from django.contrib             import auth
-from user.models                import User
+# from ggaggoong.user.models      import Host
+from user.models                import User, Host
 from django.shortcuts           import render, redirect
 from django.shortcuts           import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -47,10 +48,50 @@ def signup(request):
                     )
             if user is not None:
                 auth.login(request, user)
-                return redirect('/user/home')
+                return redirect('/user/home') #render(request, 'home.html', {'user':user})
     print("회원가입 안됨")
     return render(request, 'signup.html') 
 
+def host_signup(request):
+    print(request.user.id)
+    if request.method == 'POST':
+        if request.user.id:
+            print(request.user.id)
+            # user = User()
+            host = Host()
+            host.user_id = get_object_or_404(User, id=request.user.id)
+            host.id_card = request.POST["id_card"]
+            host.certificate_id = request.POST["certificate_id"]
+            try: # request.FILES["crimelog"]:
+                host.crimelog = request.FILES["crimelog"]
+            except:
+                pass
+            host.crime_bool = request.POST["crime_bool"]
+            try: # request.FILES["bank_img"]:
+                host.bank_img = request.FILES["bank_img"]
+            except:
+                pass
+            host.bank_num = request.POST["bank_num"]
+            host.save()
+            if host is not None:
+                # auth.login(request, user)
+                return redirect('/user/home')
+    print("회원가입 안됨")
+    return render(request, 'host_signup.html')
+
+def login(request):
+    if request.method == 'GET':
+        error_message = '로그인페이지입니다.'
+        return render(request, 'login.html', {'error_message':error_message})
+    elif request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+        user = auth.authenticate(request, email=email, password=password)        
+        if user is not None:
+            auth.login(request, user)
+            return render(request, 'home.html', {'user':user})
+    error_message = '잘못된 요청입니다. 다시 로그인해주세요.'  
+    return render(request, 'login.html', {'error_message':error_message})
 
 
 def validate_email(email):

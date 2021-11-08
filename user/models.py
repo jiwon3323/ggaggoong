@@ -68,12 +68,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Host(models.Model):
-    user_id         = models.ForeignKey('User',on_delete=models.CASCADE)
+    user_id         = models.OneToOneField('User',on_delete=models.CASCADE)
     id_card         = models.IntegerField()
     certificate_id  = models.IntegerField()
-    crimelog        = models.ImageField()
-    crime_bool      = models.BooleanField()
-    bank_img        = models.ImageField()
+    crimelog        = models.ImageField(upload_to='images/crimeLogImage',blank=True, null=True)
+    crime_bool      = models.BooleanField(default=False)
+    bank_img        = models.ImageField(upload_to='images/bankImage',blank=True, null=True)
     bank_num        = models.IntegerField()
     created_at      = models.DateTimeField(auto_now_add=True)
     updated_at      = models.DateTimeField(auto_now=True)
