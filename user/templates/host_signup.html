@@ -13,19 +13,21 @@
 <title>Document</title>
 </head>
 <body>
+
     <nav>
         <div class="nav_wrapper">
             <a href="{% url 'home' %}" class="back" alt="back">뒤로</a>
             <p href="#!" class="title">호스트 회원가입</p>
         </div>
     </nav>
+    <h1>{{ user.mom_name }}님 호스트 가입 하시나요?</h1>
     <div class="container">
         <form method="POST" action="{% url 'host_signup' %}" enctype="multipart/form-data">
         {% csrf_token %}
         <div>
           <div>
             <p class="heading">주민등록 번호</p>
-            <textarea class="textbox" name="id_card" id="" cols="30" rows="10" placeholder="주민등록 번호 입력"></textarea>
+            <textarea class="textbox" name="id_card1" id="" cols="30" rows="10" placeholder="주민등록 번호 입력"></textarea><textarea class="textbox" type='password' name="id_card2" id="" cols="30" rows="10" placeholder="주민등록 번호 입력"></textarea>
           </div>
           <div>
             <p class="heading">자격증 번호</p>
@@ -40,8 +42,8 @@
 
           <div>
             <p class="heading">범죄여부</p>
-            <input type="checkbox" name="crime_bool" value='False' id="" cols="30" rows="10" >범죄이력 없음</input>
-            <input type="checkbox" name="crime_bool" value='True' id="" cols="30" rows="10" >범죄이력 존재</input>
+            <input type="radio" name="crime_bool" value='False' id="" cols="30" rows="10" >범죄이력 없음</input>
+            <input type="radio" name="crime_bool" value='True' id="" cols="30" rows="10" >범죄이력 존재</input>
           </div>
           <div>
             <p class="heading">통장 사본</p>

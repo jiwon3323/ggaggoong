@@ -1,3 +1,4 @@
+from os import times
 from django.shortcuts           import render
 from django.contrib             import auth
 # from ggaggoong.user.models      import Host
@@ -13,8 +14,16 @@ import json, re
 from django.http                import JsonResponse
 from django.views               import View
 from django.core.exceptions     import ValidationError
+from django.contrib             import messages
+import time, random, sys, traceback, logging, datetime
+
 # from .utils                     import validate_email, validate_password
 
+def logout(request):
+    if request.method == 'GET':
+        auth.logout(request)
+        redirect('home')
+    return render(request,'home.html')
 
 def home(request):
     return render(request, 'home.html')
@@ -52,15 +61,29 @@ def signup(request):
     print("회원가입 안됨")
     return render(request, 'signup.html') 
 
+@login_required
 def host_signup(request):
     print(request.user.id)
+    try:
+        # host = Host()
+        print('try')
+        host = Host.objects.filter(user_id = request.user.id)
+    except Host.DoesNotExist:
+        print('except')
+        host = None
+    # if host is not None:
+    #     print('if1')
+    #     return render(request, 'host_signup.html', {'host' : Host.objects.filter(user_id = request.user.id)})
     if request.method == 'POST':
+        print('if2')
         if request.user.id:
+            print('if3')
             print(request.user.id)
             # user = User()
             host = Host()
-            host.user_id = get_object_or_404(User, id=request.user.id)
-            host.id_card = request.POST["id_card"]
+            host.user_id = User(id = request.user.id)
+            host.id_card1 = request.POST["id_card1"]
+            host.id_card2 = request.POST["id_card2"]            
             host.certificate_id = request.POST["certificate_id"]
             try: # request.FILES["crimelog"]:
                 host.crimelog = request.FILES["crimelog"]
@@ -74,10 +97,15 @@ def host_signup(request):
             host.bank_num = request.POST["bank_num"]
             host.save()
             if host is not None:
+                print('ssibal')
                 # auth.login(request, user)
                 return redirect('/user/home')
     print("회원가입 안됨")
-    return render(request, 'host_signup.html')
+    if request.method =='GET':
+        if request.user.id is None:
+            messages.warning(request, "회원가입 먼저 해주세요!")
+            return redirect('signup')
+        return render(request, 'host_signup.html')#redirect('signup')
 
 def login(request):
     if request.method == 'GET':
@@ -93,6 +121,64 @@ def login(request):
     error_message = '잘못된 요청입니다. 다시 로그인해주세요.'  
     return render(request, 'login.html', {'error_message':error_message})
 
+
+# def host_login(request):
+#     if request.method == 'GET':
+#         if Host.objects.get(id=request.user.id) is not None:
+#             return render(request, 'host_login.html')
+            
+#         elif Host.objects.get(id=request.user.id) is None:
+#             error_message = '호스트 로그인페이지입니다.'
+#             return render(request, 'host_signup.html',{'error_message':error_message})
+#     error_message = '잘못된 요청입니다. 다시 로그인해주세요.'  
+#     return render(request, 'login.html', {'error_message':error_message})
+
+
+def user_update(request):
+    id = request.user.id
+    user = User.objects.get(id=id)
+    if request.method == 'POST':
+        user.username=request.POST['mom_name'],
+        user.email=request.POST['email'],
+        user.mom_name=request.POST['mom_name'],
+        user.password=request.POST['password1'],
+        user.baby_name=request.POST['baby_name'],
+        user.baby_gender=request.POST['baby_gender'],
+        user.baby_birth=request.POST.get('baby_birth'),
+        user.phone=request.POST['phone_num'],
+        user.address=request.POST['address']
+
+        user.save()
+        return redirect('home.html')
+    elif request.method == "GET":
+        return render(request, "user_update.html", {"user":user})
+
+
+def host_update(request):
+    user_id = request.user.id
+    host = Host.objects.get(user_id = user_id)
+    if request.method == 'POST':
+        print(request.user.id)
+        host.user_id = get_object_or_404(User, id=request.user.id)
+        host.id_card1 = request.POST["id_card1"]
+        host.id_card2 = request.POST["id_card2"]            
+        host.certificate_id = request.POST["certificate_id"]
+        try: # request.FILES["crimelog"]:
+            host.crimelog = request.FILES["crimelog"]
+        except:
+            pass
+        host.crime_bool = request.POST["crime_bool"]
+        try: # request.FILES["bank_img"]:
+            host.bank_img = request.FILES["bank_img"]
+        except:
+            pass
+        host.bank_num = request.POST["bank_num"]
+        host.save()
+        if host is not None:
+            # auth.login(request, user)
+            return redirect('/user/home')
+    elif request.method == "GET":
+        return render(request, "host_signup.html", {"host":host})
 
 def validate_email(email):
         return re.match('^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', email) != None 
