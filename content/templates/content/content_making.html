@@ -6,6 +6,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
+    <a href="{% url 'home' %}"><button class="button waves-effect waves-light" name="action">홈으로</button></a>
+    {{user.email}}
     <h1>content_making</h1>
     {% if error %}
     <h3> {{ error }} </h3>

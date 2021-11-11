@@ -10,5 +10,7 @@ urlpatterns = [
     path('host_signup/', views.host_signup, name="host_signup"),
     # path('host_login/', views.host_login, name="host_login"),
     path('host_update/', views.host_update, name="host_update"),
+    path('mypage/', views.mypage, name='mypage'),
+    path('host_mypage/', views.mypage, name='host_mypage'),
     # path('login_success/', views.login_success, name="login_success"),
 ]

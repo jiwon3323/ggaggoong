@@ -19,7 +19,7 @@ class Contents(models.Model):
     price = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # host_id = models.Foreignkey('Host.user_id', on_delete=models.CASCADE, null=True)
+    host_id = models.ForeignKey(Host, on_delete=models.CASCADE, null=True)
 
 class Contents_Detail(models.Model):
     detail = models.CharField(max_length=500)
@@ -29,5 +29,12 @@ class Contents_Detail(models.Model):
         null=True
     )
     contents_id = models.ForeignKey('Contents', on_delete=models.CASCADE, null=True)
-    # host_id = models.Foreignkey('Contents.host_id', on_delete=models.CASCADE, null=True)
+    host_id = models.ForeignKey(Host, on_delete=models.CASCADE, null=True)
 
+
+class Reserve(models.Model):
+    content_id = models.ForeignKey(Contents, on_delete=models.PROTECT)
+    reserve_user = models.ForeignKey(User, on_delete=models.PROTECT)
+    created_at = models.DateTimeField(auto_now_add=True)
+    reserve_alive = models.BooleanField(default=True)
+    canceled_at = models.DateTimeField(null=True)

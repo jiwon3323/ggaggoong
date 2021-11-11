@@ -1,12 +1,35 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseBadRequest, JsonResponse
 from content.models import Contents, Contents_Detail
+from faq.models import FAQ, FAQ_Answer
+from content.models import Reserve
+from user.models import User, Host
+from django.contrib             import messages
 import json
+from collections import defaultdict
 
 detail_count = {
     "count": 0,
 }
+def pay_page(request):
+    return render(request,'content/pay_page.html')
 
+def reserve(request, content_number):
+    tmp_reserve = Reserve.objects.filter(content_id=content_number, reserve_alive=True)
+    content = Contents.objects.get(id=content_number)
+    if len(tmp_reserve) > content.people_number:
+        print('more than the number')
+        messages.warning(request, "more than the number")
+        return redirect(f'/content/page/{content_number}', content_number)
+    else:
+        print('else')
+        reserve = Reserve()
+        reserve.content_id = content
+        reserve.reserve_user = User.objects.get(id=request.user.id)
+        reserve.save()
+        print(reserve)
+    reserves = Reserve.objects.filter(content_id=content_number)
+    return render(request, 'content/pay_page.html', {'reserves':reserves, 'content':content})
 
 def con_making(request):
 
@@ -60,6 +83,7 @@ def con_making(request):
             new_content.age_min = request.POST.get("age_min")
             new_content.age_max = request.POST.get("age_max")
             new_content.price = request.POST.get("price")
+            new_content = Host.objects.get(user_id=request.user.id)
             new_content.save()
 
             id_number = new_content
@@ -69,6 +93,7 @@ def con_making(request):
                 new_detail_content.contents_id = id_number
                 new_detail_content.detail = request.POST.get(f"detail_{j}")
                 new_detail_content.detail_img = request.FILES.get(f"detail_img_{j}")
+                new_detail_content = Host.objects.get(user_id=request.user.id)
                 new_detail_content.save()
             return redirect("/admin/")
         else:
@@ -80,10 +105,34 @@ def con_making(request):
 
 def con_page(request, content_number):
     new_content = Contents.objects.get(id=content_number)
-    print(new_content.title_name)
+    # print(new_content.title_name)
+    reserves = Reserve.objects.filter(content_id=content_number, reserve_alive=True)
+    # print(len(reserves))
+    faq = FAQ.objects.filter(faq_content=content_number).order_by('-created_at')
+    faq_id = FAQ.objects.filter(faq_content=content_number).values_list('id', flat=True)
+    faq_answers = FAQ_Answer.objects.filter(question_id__in=faq_id).order_by('-created_at')
+    faq_list = []
+    # print('afdssdfasd')
+    for faq_question in faq:
+        faq_list.append([faq_question,])
+    for idx, fa in enumerate(faq_list):
+        for ans in faq_answers:
+            if ans.question_id == fa[0]:
+                faq_list[idx] = [fa[0],ans]
+    
+    # print(faq_list)
+
+
+
+    # print(faq_list)
     context = {
         "new_content": new_content,
-        "new_detail_content": []
+        "new_detail_content": [],
+        "faqs" : faq,
+        "faq_len" : len(faq),
+        "reserves_len" : len(reserves),
+        "faq_answers" : faq_answers,
+        "faq_list" : faq_list
     }
     for item in Contents_Detail.objects.filter(contents_id=content_number):
         context["new_detail_content"].append(item)

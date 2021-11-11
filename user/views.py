@@ -16,6 +16,8 @@ from django.views               import View
 from django.core.exceptions     import ValidationError
 from django.contrib             import messages
 import time, random, sys, traceback, logging, datetime
+from content.models             import Contents, Contents_Detail
+from faq.models                 import FAQ, FAQ_Answer
 
 # from .utils                     import validate_email, validate_password
 
@@ -26,7 +28,14 @@ def logout(request):
     return render(request,'home.html')
 
 def home(request):
-    return render(request, 'home.html')
+    host_flag = False
+    try:
+        Host.objects.get(user_id=request.user.id)
+        host_flag = True
+    except:
+        pass
+    contents = Contents.objects.all().order_by("-created_at")
+    return render(request, 'home.html', {"contents":contents, "host_flag":host_flag})
 # 회원가입
 def signup(request):
     if request.method == 'POST':
@@ -81,7 +90,7 @@ def host_signup(request):
             print(request.user.id)
             # user = User()
             host = Host()
-            host.user_id = User(id = request.user.id)
+            host.user_id = User.objects.get(id = request.user.id)
             host.id_card1 = request.POST["id_card1"]
             host.id_card2 = request.POST["id_card2"]            
             host.certificate_id = request.POST["certificate_id"]
@@ -117,7 +126,7 @@ def login(request):
         user = auth.authenticate(request, email=email, password=password)        
         if user is not None:
             auth.login(request, user)
-            return render(request, 'home.html', {'user':user})
+            return redirect('/user/home')#render(request, 'home.html', {'user':user})
     error_message = '잘못된 요청입니다. 다시 로그인해주세요.'  
     return render(request, 'login.html', {'error_message':error_message})
 
@@ -188,3 +197,40 @@ def validate_password(password):
 
 def duplicate_email_check(email):
         return User.objects.filter(email=email).exists() 
+
+def mypage(request):
+    if request.method == "GET":
+        # 호스트면 이거 보여주고 일반이면 안보여주고, 
+        # to-do : 일반 사용자가 해당 컨텐츠에 지원하고 결제하는 부분까지 해야함
+        try:
+            print(User.objects.get(id=request.user.id))
+            print(Contents.objects.filter(id=request.user.id))
+            print(FAQ.objects.filter(questioner=request.user.id))
+            contents = Contents.objects.filter(host_id=request.user.id).order_by('-created_at')
+            user = User.objects.get(id=request.user.id)
+            faqs = FAQ.objects.filter(questioner=request.user.id).order_by('-created_at')
+            print(user)
+            context= {
+                'user' : user,
+                'contests' : contents,
+                'faqs' : faqs,
+            }
+            return render(request, 'mypage.html', context)
+        except:
+            messages.warning(request, "회원가입 먼저 해주세요!")
+            return render(request, 'mypage.html')
+        
+def host_mypage(request):
+    # 노필요 
+    if request.method == "GET":
+        try:
+
+            host = Host.objects.get(user_id=request.user.id)
+            print(host)
+            context= {
+                'host':host
+            }
+            return render(request, 'mypage.html', context)
+        except:
+            messages.warning(request, "회원가입 먼저 해주세요!")
+            return render(request, 'login.html')

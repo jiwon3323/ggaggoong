@@ -19,10 +19,38 @@
             {% if user.is_authenticated %}
             <a href="{% url 'home' %}"><button class="button waves-effect waves-light" name="action">홈으로</button></a>
             <a href="{% url 'logout' %}"><button class="button waves-effect waves-light" name="action">로그아웃</button></a>
+            <a href="{% url 'mypage' %}"><button class="button waves-effect waves-light" name="action">마이페이지</button></a>
             {% else %}
             <a href="{% url 'signup' %}"><button class="button waves-effect waves-light" name="action">회원가입</button></a>
             <a href="{% url 'login' %}"><button class="button waves-effect waves-light" name="action">로그인</button></a>
             {% endif %}
+            
+            
+            
+            
+            {% if host_flag %}
+            호스트 
+            <a href="{% url 'host_mypage' %}"><button class="button waves-effect waves-light" name="action">호스트 마이페이지</button></a>
+            {% else %}
+            호스트 ㄴㄴ
+            {% endif %}
+            
+
+            {% for content in contents %}
+            <a href="{% url 'Content:content_detail' content.id%}">
+            <div>
+            title_name : {{ content.title_name }}
+            sub_title_name : {{ content.sub_title_name }}
+            content_date : {{ content.content_date }}
+            {% if content.title_img %}
+                <div style="width:150px">
+                    <img src="{{ content.title_img.url }}" style="width:100%;"/>
+                </div>
+            {% endif %}
+            </div>
+            </a>
+            {% endfor %}
+
 
             
             

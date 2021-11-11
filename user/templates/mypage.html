@@ -1,0 +1,35 @@
+mypage ssibal
+{{ user }}
+
+
+{% for content in contents %}
+<table border='1', class='faqTable'>
+<tr>
+    <td>{{ forloop.revcounter }}</td>
+    <td>{{ content.title_name }}</td>
+    <td>{{ content.sub_title_name }}</td>
+    <td>{{ content.content_date }}</td>
+    {% if content.title_img %}
+        <div style="width:150px">
+            <img src="{{ content.title_img.url }}" style="width:100%;"/>
+        </div>
+    {% endif %}
+</tr>
+</table>
+{% endfor %}
+
+
+
+
+{% for faq in faqs %}
+<table border='1', class='faqTable'>
+<tr>
+    <td>{{ forloop.revcounter }}</td>
+    <td>{{ faq.question }}</td>
+    <td>{{ faq.questioner }}</td>
+    <td>{{ faq.created_at }}</td>
+</tr>
+</table>
+{% endfor %}
+
+

@@ -1,0 +1,13 @@
+
+pay page
+{{content.people_number}}
+
+<br>
+{% for reserve in reserves %}
+{{ reserve.content_id }}
+{{ reserve.reserve_user }}
+{{ reserve.created_at }}
+{{ reserve.reserve_alive }}
+{{ reserve.canceled_at }}
+<br>
+{% endfor %}
