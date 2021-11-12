@@ -49,12 +49,21 @@
     
 </br>
 </br>
+{% if host_flag %}
+
+    <h3>호스트 입니다 </h3>
+{% else %}
 {% if reserves_len >= new_content.people_number %}
 가득참
 {% else %}
 {{reserves_len}}
 {{new_content.people_number}}
+{% if reserve_available %}
 <a href="{% url 'Content:reserve' new_content.id %}"><button class="button waves-effect waves-light" name="action">결제하기</button></a>
+{% else %}
+<h3>이미 결제함 </h3>
+{% endif %}
+{% endif %}
 {% endif %}
 
 </br></br>
@@ -82,7 +91,7 @@ new_content:  {{ new_content.id }}
                 <td>{{ faq.0.question }}</td>
                 <td>{{ faq.0.questioner }}</td>
                 <td>{{ faq.0.created_at }}</td>
-                <td><button id="{{ forloop.revcounter }}" onclick="faq_answer(this.id)" class="btnAnswer">답변하기</button></td>
+                <td id = "faq.0.id"><button id="{{ forloop.revcounter }}" onclick="faq_answer(this.id, {{ faq.0.id }})" class="btnAnswer">답변하기</button></td>
             </tr>
             {% if faq.1 %}
             <tr>
@@ -153,13 +162,14 @@ new_content:  {{ new_content.id }}
         
         })
         $('.faqQuestion').val('');
-
+        window.location.reload()
 
 
 
     })
     let target_question_id
-    function faq_answer(reply_id){
+    var _real_id
+    function faq_answer(reply_id, real_id){
         console.log(reply_id);
         target_question_id = reply_id;
         let faq_question = document.querySelector('#tr_'+target_question_id);
@@ -172,19 +182,23 @@ new_content:  {{ new_content.id }}
             `;
         tmp_tr.innerHTML = ass;
         faq_question.after(tmp_tr);
-        
+        _real_id = real_id
         console.log(ass)
+        console.log(real_id)
     };
 
-
+    
 
     $('.faqAnswerSend').live('click', '.dynamicElement', function(){
         console.log('asdfasdfasd');
+        console.log(_real_id)
         let content = document.querySelector('.faqAnswer').value;
+        let faq_id = document.querySelector('.button');
+        console.log(faq_id)
         console.log(content)
         let param ={
             'answer' : content,
-            'question_id' : target_question_id,
+            'question_id' : _real_id,
             'answerer' : '{{ user.id }}',
         }
         $.ajax({
@@ -195,7 +209,9 @@ new_content:  {{ new_content.id }}
             },
             data : JSON.stringify(param),
             success:function(data){
+                console.log('ssibval');
                 console.log(data);
+                console.log(target_question_id);
 
                 let faq_question = document.querySelector('#tr_'+target_question_id);
                 console.log(faq_question)

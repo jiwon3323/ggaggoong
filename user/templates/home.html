@@ -28,11 +28,12 @@
             
             
             
-            {% if host_flag %}
+            {% if host_flag %} 
             호스트 
             <a href="{% url 'host_mypage' %}"><button class="button waves-effect waves-light" name="action">호스트 마이페이지</button></a>
             {% else %}
             호스트 ㄴㄴ
+            <a href="{% url 'host_signup' %}"><button class="button waves-effect waves-light" name="action">호스트 가입하기</button></a>
             {% endif %}
             
 

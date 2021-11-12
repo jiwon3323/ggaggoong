@@ -16,8 +16,9 @@ from django.views               import View
 from django.core.exceptions     import ValidationError
 from django.contrib             import messages
 import time, random, sys, traceback, logging, datetime
-from content.models             import Contents, Contents_Detail
+from content.models             import Contents, Contents_Detail, Reserve
 from faq.models                 import FAQ, FAQ_Answer
+
 
 # from .utils                     import validate_email, validate_password
 
@@ -127,6 +128,8 @@ def login(request):
         if user is not None:
             auth.login(request, user)
             return redirect('/user/home')#render(request, 'home.html', {'user':user})
+        elif user is None:
+            messages.warning(request, "회원정보가 없습니다 회원가입해주세요")
     error_message = '잘못된 요청입니다. 다시 로그인해주세요.'  
     return render(request, 'login.html', {'error_message':error_message})
 
@@ -209,11 +212,13 @@ def mypage(request):
             contents = Contents.objects.filter(host_id=request.user.id).order_by('-created_at')
             user = User.objects.get(id=request.user.id)
             faqs = FAQ.objects.filter(questioner=request.user.id).order_by('-created_at')
+            reserves = Reserve.objects.filter(reserve_user=request.user.id).order_by('-created_at')
             print(user)
             context= {
                 'user' : user,
                 'contests' : contents,
                 'faqs' : faqs,
+                'reserves' : reserves,
             }
             return render(request, 'mypage.html', context)
         except:

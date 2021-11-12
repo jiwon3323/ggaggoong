@@ -1,35 +1,63 @@
-mypage ssibal
+mypage 
+<br>
 {{ user }}
 
+<a href="{% url 'home' %}"><button class="button waves-effect waves-light" name="action">홈으로</button></a>
+<a href="{% url 'Content:content_make' %}"><button class="button waves-effect waves-light" name="action">컨텐츠 만들기</button></a>
 
-{% for content in contents %}
+<h1>Content</h1>
 <table border='1', class='faqTable'>
-<tr>
-    <td>{{ forloop.revcounter }}</td>
-    <td>{{ content.title_name }}</td>
-    <td>{{ content.sub_title_name }}</td>
-    <td>{{ content.content_date }}</td>
-    {% if content.title_img %}
-        <div style="width:150px">
-            <img src="{{ content.title_img.url }}" style="width:100%;"/>
-        </div>
-    {% endif %}
-</tr>
+    <tbody>
+        {% for content in contents %}
+            <a href="{% url 'Content:content_detail' content.id%}">
+            <div>
+            title_name : {{ content.title_name }}
+            sub_title_name : {{ content.sub_title_name }}
+            content_date : {{ content.content_date }}
+            {% if content.title_img %}
+                <div style="width:150px">
+                    <img src="{{ content.title_img.url }}" style="width:100%;"/>
+                </div>
+            {% endif %}
+            </div>
+            </a>
+            {% endfor %}
+    </tbody>
 </table>
-{% endfor %}
 
 
 
 
-{% for faq in faqs %}
+
+<h1>FAQs</h1>
 <table border='1', class='faqTable'>
-<tr>
-    <td>{{ forloop.revcounter }}</td>
-    <td>{{ faq.question }}</td>
-    <td>{{ faq.questioner }}</td>
-    <td>{{ faq.created_at }}</td>
-</tr>
+    <tbody>
+        {% for faq in faqs %}
+        <tr>
+            <a href="{% url 'Content:content_detail' faq.faq_content.id %}"></a>
+            <td>{{ forloop.revcounter }}</td>
+            <td>{{ faq.faq_content.title_name }}</td>
+            <td>{{ faq.question }}</td>
+            <td>{{ faq.questioner }}</td>
+            <td>{{ faq.created_at }}</td>
+            </a>
+        </tr>   
+        {% endfor %}
+    </tbody>
 </table>
-{% endfor %}
 
+
+<h1>Reserves</h1>
+<table border='1', class='faqTable'>
+    <tbody>
+        {% for reserve in reserves %}
+        <tr>
+            <td>{{ forloop.revcounter }}</td>
+            <td>{{ reserve.content_id }}</td>
+            <td>{{ reserve.questioner }}</td>
+            <td>{{ reserve.created_at }}</td>
+        </tr>   
+        {% endfor %}
+    </tbody>
+</table>
 

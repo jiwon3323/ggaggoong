@@ -83,11 +83,11 @@ def con_making(request):
             new_content.age_min = request.POST.get("age_min")
             new_content.age_max = request.POST.get("age_max")
             new_content.price = request.POST.get("price")
-            new_content = Host.objects.get(user_id=request.user.id)
+            new_content.host_id = Host.objects.get(user_id=request.user.id)
             new_content.save()
 
             id_number = new_content
-
+            content_number = new_content.id
             for j in range(int(request.POST.get("detail_count"))):
                 new_detail_content = Contents_Detail()
                 new_detail_content.contents_id = id_number
@@ -95,7 +95,8 @@ def con_making(request):
                 new_detail_content.detail_img = request.FILES.get(f"detail_img_{j}")
                 new_detail_content = Host.objects.get(user_id=request.user.id)
                 new_detail_content.save()
-            return redirect("/admin/")
+            print('contetnt number : ', content_number)
+            return redirect(f'/content/page/{content_number}', content_number)
         else:
             context["error"] = "정확히 모두 입력바랍니다."
             return JsonResponse(context, status=400)
@@ -122,9 +123,20 @@ def con_page(request, content_number):
     
     # print(faq_list)
 
-
-
-    # print(faq_list)
+    # 결제하기 버튼 clickable flag 값 생성해야함 
+    reserve_available = False
+    host_flag = False
+    reserve_flag = Reserve.objects.filter(content_id=content_number, reserve_user=request.user.id)
+    if reserve_flag:
+        reserve_available = False
+    else:
+        reserve_available = True
+    if new_content.host_id.id == request.user.id:
+        host_flag = True
+    else:
+        host_flag = False
+    # print('new_content.host_id : ', new_content.host_id.id)
+    # print('request.user.id : ', request.user.id)
     context = {
         "new_content": new_content,
         "new_detail_content": [],
@@ -132,7 +144,9 @@ def con_page(request, content_number):
         "faq_len" : len(faq),
         "reserves_len" : len(reserves),
         "faq_answers" : faq_answers,
-        "faq_list" : faq_list
+        "faq_list" : faq_list,
+        "reserve_available" : reserve_available,
+        "host_flag" : host_flag,
     }
     for item in Contents_Detail.objects.filter(contents_id=content_number):
         context["new_detail_content"].append(item)
