@@ -88,14 +88,18 @@ def con_making(request):
 
             id_number = new_content
             content_number = new_content.id
-            for j in range(int(request.POST.get("detail_count"))):
-                new_detail_content = Contents_Detail()
-                new_detail_content.contents_id = id_number
-                new_detail_content.detail = request.POST.get(f"detail_{j}")
-                new_detail_content.detail_img = request.FILES.get(f"detail_img_{j}")
-                new_detail_content = Host.objects.get(user_id=request.user.id)
-                new_detail_content.save()
+            try:
+                for j in range(int(request.POST.get("detail_count"))):
+                    new_detail_content = Contents_Detail()
+                    new_detail_content.contents_id = id_number
+                    new_detail_content.detail = request.POST.get(f"detail_{j}")
+                    new_detail_content.detail_img = request.FILES.get(f"detail_img_{j}")
+                    new_detail_content.host_id = Host.objects.get(user_id=request.user.id)
+                    new_detail_content.save()
+            except:
+                print('detail fail')
             print('contetnt number : ', content_number)
+            print(new_detail_content)
             return redirect(f'/content/page/{content_number}', content_number)
         else:
             context["error"] = "정확히 모두 입력바랍니다."

@@ -18,6 +18,7 @@ from django.contrib             import messages
 import time, random, sys, traceback, logging, datetime
 from content.models             import Contents, Contents_Detail, Reserve
 from faq.models                 import FAQ, FAQ_Answer
+from django.core.paginator import Paginator
 
 
 # from .utils                     import validate_email, validate_password
@@ -211,25 +212,26 @@ def mypage(request):
             # print(User.objects.get(id=request.user.id))
             # print(Contents.objects.filter(id=request.user.id))
             # print(FAQ.objects.filter(questioner=request.user.id))
-            # host_contents = Contents.objects.filter(host_id=request.user.id).order_by('-created_at')
+            host_contents = Contents.objects.filter(host_id=request.user.id).order_by('-created_at')
             user = User.objects.get(id=request.user.id)
             faqs = FAQ.objects.filter(questioner=request.user.id).order_by('-created_at')
             reserves = Reserve.objects.filter(reserve_user=request.user.id).order_by('-created_at')
+            
+            count_per_page = 3
+            pagenated_reserves = [reserves[i * count_per_page:(i+1) * count_per_page] for i in range((len(reserves) + count_per_page - 1) // count_per_page) ]
 
-            print(reserves.content_date)
 
 
             total_reserve_price = 0
             total_reserve_price_flag = False
             remain_reserves = []
+            canceled_reserves = []
             for reserve in reserves:
-                total_reserve_price += reserve.price
-                print('remain')
-                if reserve.content_date > datetime.datetime.now():
-                    remain_reserves.append(reserve)
-                    print(reserve.content_date)
-                    print(datetime.datetime.now())
-            print(remain_reserves)
+                total_reserve_price += reserve.content_id.price
+                if reserve.content_id.content_date.isoformat() > datetime.datetime.now().isoformat():
+                    remain_reserves.append(reserve.content_id)
+                if reserve.reserve_alive == False:
+                    canceled_reserves.append(reserve)
 
             if total_reserve_price > 0:
                 total_reserve_price_flag = True
@@ -241,16 +243,27 @@ def mypage(request):
 
             host_flag = False
             host_contents_flag = False
-            if Host.objects.get(user_id = request.user).exist():
+            
+            tmp_host_content = []
+            for host_content in host_contents:
+                tmp_host_content.append(host_content)                
+            
+            try: 
+                Host.objects.filter(user_id = request.user).exists()
                 host_flag = True
                 host = Host.objects.get(user_id = request.user)
-                if Contents.objects.get(host_id = host).exist():
+                print('tru')
+                if Contents.objects.filter(host_id = host).exists():
                     host_contents_flag = True
-                    host_contents = Contents.objects.get(host_id = host).exist()
-            
+                    host_contents = Contents.objects.filter(host_id = host).exists()
+                    host_faqs = FAQ.objects.filter(faq_content__in = tmp_host_content)
+            except:
+                host_contents = None
+                host_faqs = None
+            remain_reserves_len = len(remain_reserves)
+            percent = (remain_reserves_len / reserves_len) * 100
+            canceled_reserves_len = len(canceled_reserves)
 
-            
-            
             context= {
                 'user' : user,
                 'host_contents' : host_contents,
@@ -262,6 +275,12 @@ def mypage(request):
                 'total_reserve_price_flag' : total_reserve_price_flag,
                 'reserves_len' : reserves_len,
                 'reserves_len_flag' : reserves_len_flag,
+                'remain_reserves' : remain_reserves,
+                'remain_reserves_len' : remain_reserves_len,
+                'percent' : percent,
+                'canceled_reserves_len' : canceled_reserves_len,
+                'pagenated_reserves' : pagenated_reserves,
+                'host_faqs' : host_faqs,
             }
             return render(request, 'mypage.html', context)
         except:

@@ -307,11 +307,11 @@
 
 
             for (let i = 0; i < detailLength; i++) {
-                
+                console.log('for ssi')
                 bodyForm.append(`detail_${i}`, document.querySelector(`textarea#detail_${i}`).value);
                 bodyForm.append(`detail_img_${i}`, document.querySelector(`input#detail_img_${i}`).files[0]);
             }
-            
+            console.log(bodyForm)
 
             let response = await fetch("/content/make/", {
                 method: "POST",

@@ -40,9 +40,13 @@ def faq_answer(request):
     faq_answer.answerer = Host.objects.get(user_id = jsonObject.get('answerer'))
     faq_answer.question_id = FAQ.objects.get(id = int(jsonObject.get('question_id')))
     faq_answer.answer = jsonObject.get('answer')
-    
 
+    
+    faq_answer.question_id.answer_done = True
+    
+    faq_answer.question_id.save()
     faq_answer.save()
+    
 
     context={
         'answer' : faq_answer.answer,

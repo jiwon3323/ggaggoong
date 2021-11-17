@@ -4,7 +4,7 @@ from user.models import User, Host
 # Create your models here.
 class FAQ(models.Model):
     questioner      = models.ForeignKey('user.User', on_delete=models.CASCADE)
-    faq_content     = models.ForeignKey('content.Contents', on_delete=models.CASCADE)
+    faq_content     = models.ForeignKey('content.Contents', on_delete=models.CASCADE, related_name="host_content")
     question        = models.CharField(max_length=250)
     answer_id       = models.ForeignKey('FAQ_Answer', on_delete=models.CASCADE,null=True, blank=True)
     answer_done     = models.BooleanField(null=True, blank=True)
