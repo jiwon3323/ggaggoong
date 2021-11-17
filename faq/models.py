@@ -13,7 +13,7 @@ class FAQ(models.Model):
 
 class FAQ_Answer(models.Model):
     answerer        = models.ForeignKey(Host, on_delete=models.CASCADE)
-    question_id     = models.ForeignKey('FAQ', on_delete=models.CASCADE)
+    question_id     = models.ForeignKey('FAQ', on_delete=models.CASCADE, related_name="answer")
     answer          = models.CharField(max_length=250)
     created_at      = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at      = models.DateTimeField(auto_now=True,null=True, blank=True)
