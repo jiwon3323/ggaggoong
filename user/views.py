@@ -36,7 +36,9 @@ def home(request):
     except:
         pass
     contents = Contents.objects.all().order_by("-created_at")
-    return render(request, 'home.html', {"contents":contents, "host_flag":host_flag})
+    count_per_page = 3
+    pagenated_reserves = [contents[i * count_per_page:(i + 1) * count_per_page] for i in range((len(contents) + count_per_page - 1) // count_per_page)]
+    return render(request, 'home.html', {"contents":contents, "host_flag":host_flag, "pagenated_reserves":pagenated_reserves})
 # 회원가입
 def signup(request):
     if request.method == 'POST':
