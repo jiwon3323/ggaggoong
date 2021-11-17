@@ -110,11 +110,15 @@ def con_page(request, content_number):
     reserves = Reserve.objects.filter(content_id=content_number, reserve_alive=True)
     # print(len(reserves))
     faq = FAQ.objects.filter(faq_content=content_number).order_by('-created_at')
-    faq_id = FAQ.objects.filter(faq_content=content_number).values_list('id', flat=True)
-    faq_answers = FAQ_Answer.objects.filter(question_id__in=faq_id).order_by('-created_at')
+    # faq_id = FAQ.objects.filter(faq_content=content_number).values_list('id', flat=True)
+    # faq_answers = FAQ_Answer.objects.filter(question_id__in=faq_id).order_by('-created_at')
+    faq_answers = FAQ_Answer.objects.filter(question_id__in=faq).order_by('-created_at')
+    # faq_answers = []
     faq_list = []
     # print('afdssdfasd')
     for faq_question in faq:
+        # faq_answers.append(faq_question.answer.order_by('-created_at')[0])
+
         faq_list.append([faq_question,])
     for idx, fa in enumerate(faq_list):
         for ans in faq_answers:
