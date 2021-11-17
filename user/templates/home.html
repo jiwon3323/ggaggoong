@@ -1,6 +1,173 @@
 {% extends "base.html" %}
 
-{% block head %}
+    <head>
+        <style>
+            .bd-placeholder-img {
+              font-size: 1.125rem;
+              text-anchor: middle;
+              -webkit-user-select: none;
+              -moz-user-select: none;
+              user-select: none;
+            }
+      
+            @media (min-width: 768px) {
+              .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+              }
+            }
+            .comment{
+              color: blue;
+              margin-bottom: 1%;
+            }
+            .container_1{
+              position: relative;
+              padding: 10%;
+              padding-top: 90px;
+              padding-bottom: 1px;
+              text-align: center;
+            }
+            .container_2{
+              position: relative;
+              padding: 2%;
+              margin-top: 40px;
+              padding-bottom: 50px;
+              margin-left: 200px;
+              margin-right: 200px;
+              padding-left: 0px;
+              padding-right: 0px;
+            }
+            .container{
+              position: relative;
+      
+             }
+      
+          </style>
+    </head>
+
+    
+    <!-- Custom styles for this template -->
+    <link href="carousel.css" rel="stylesheet">
+  </head>
+  <body>
+
+<main>
+{% load static %}
+<div class="container_1">
+
+    <h2>안녕하세요 까꿍입니다. <br>
+        아이들에게는 새로운 놀이터를 <br>
+        고객님께는 새로운 쉼터를 제공해드립니다. <br>
+        까꿍을 통해 놀라운 경험들을 접해보세요.
+    </h2>
+    {% if user.is_authenticated %}
+    <p class="comment"> 안녕하세요<br>{{ user.username }} 님 반갑습니다.</p>
+    {% else %}
+    <p class="comment"> 로그인 후 이용해보세요</p>
+    {% endif %}
+</div>
+
+<div class="container_2">
+    <h1><div align="left">Hot Contents</div></h1>
+</div>
+  <!-- Marketing messaging and featurettes
+  ================================================== -->
+  <!-- Wrap the rest of the page in another container to center all the content. -->
+
+
+  <div class="container marketing">
+
+    <!-- Three columns of text below the carousel -->
+    <div class="row" align="center">
+      <div class="col-lg-4">
+        <img class="bd-placeholder-img rounded-circle" width="140" height="140" src="{{ contents.0.title_img.url }}" role="img" aria-label="Placeholder: 140x140" align="center" />
+
+        <h2>{{ contents.0.title_name }}</h2>
+        <p>{{ contents.0.sub_title_name }}</p>
+        <p><a class="btn btn-secondary" href="{% url 'Content:content_detail' contents.0.id%}">View details &raquo;</a></p>
+      </div><!-- /.col-lg-4 -->
+      <div class="col-lg-4">
+        <img class="bd-placeholder-img rounded-circle" width="140" height="140" src="{{ contents.1.title_img.url }}" role="img" aria-label="Placeholder: 140x140" align="center" />
+
+        <h2>{{ contents.1.title_name }}</h2>
+        <p>{{ contents.1.sub_title_name }}</p>
+        <p><a class="btn btn-secondary" href="{% url 'Content:content_detail' contents.1.id%}">View details &raquo;</a></p>
+      </div><!-- /.col-lg-4 -->
+      <div class="col-lg-4">
+        <img class="bd-placeholder-img rounded-circle" width="140" height="140" src="{{ contents.2.title_img.url }}" role="img" aria-label="Placeholder: 140x140" align="center" />
+
+        <h2>{{ contents.2.title_name }}</h2>
+        <p>{{ contents.2.sub_title_name }}</p>
+        <p><a class="btn btn-secondary" href="{% url 'Content:content_detail' contents.2.id%}">View details &raquo;</a></p>
+      </div><!-- /.col-lg-4 -->
+    </div><!-- /.row -->
+
+
+    <!-- START THE FEATURETTES -->
+
+    <hr class="featurette-divider">
+
+
+    <!-- /END THE FEATURETTES -->
+
+  </div><!-- /.container -->
+
+    <div class="container_2">
+        <h1><div align="left">All Contents</div></h1>
+    </div>
+    {% for content in contents %}
+        <a href="{% url 'Content:content_detail' content.id%}">
+            <div>
+                title_name : {{ content.title_name }}
+                sub_title_name : {{ content.sub_title_name }}
+                content_date : {{ content.content_date }}
+                {% if content.title_img %}
+                <div style="width:150px">
+                    <img src="{{ content.title_img.url }}" style="width:100%;"/>
+                </div>
+                {% endif %}
+            </div>
+        </a>
+    {% endfor %}
+<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        {% for pagenated_reserve in pagenated_reserves %}
+        <div class="carousel-item active">
+            <div class="row">
+                {% for reserve in pagenated_reserve %}
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <img src="{{ reserve.title_img.url }}" style="height: 20rem; width: 20rem;" class="card-img"/>
+                            <h5 class="card-title">{{reserve.title_name}}</h5>
+                            <p class="card-text">{{reserve.sub_title_name}}</p>
+                            <a href="{% url 'Content:content_detail' reserve.id %}" class="btn btn-primary">더 알아보기</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+   FOOTER
+
+</main>
+
+
+    <script src="/docs/5.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+      
+  </body>
+</html>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 {% endblock %}
@@ -8,7 +175,6 @@
     {% block content %}
 <body style="background-color: rgb(255,120,137);">
 <h1>함께 육아하며 즐거운 시간을 만들어봐요</h1>
-
 
     <div class="container">
         <!-- <img class="login_logo" src="/static/asdf.png" alt="chachacha"> -->
