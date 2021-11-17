@@ -70,9 +70,9 @@ def signup(request):
                     )
             if user is not None:
                 auth.login(request, user)
-                return redirect('/user/home') #render(request, 'home.html', {'user':user})
+                return redirect('home') #render(request, 'home.html', {'user':user})
     elif request.method == "GET" and request.user.id:
-        return redirect('/user/home')
+        return redirect('home')
     print("회원가입 안됨")
     return render(request, 'signup.html') 
 
@@ -132,7 +132,7 @@ def login(request):
         user = auth.authenticate(request, email=email, password=password)        
         if user is not None:
             auth.login(request, user)
-            return redirect('/user/home')#render(request, 'home.html', {'user':user})
+            return redirect('home')#render(request, 'home.html', {'user':user})
         elif user is None:
             messages.warning(request, "회원정보가 없습니다 회원가입해주세요")
     error_message = '잘못된 요청입니다. 다시 로그인해주세요.'  
@@ -265,7 +265,9 @@ def mypage(request):
             remain_reserves_len = len(remain_reserves)
             percent = (remain_reserves_len / reserves_len) * 100
             canceled_reserves_len = len(canceled_reserves)
-
+            first_pagenated_reserves = pagenated_reserves[:1]
+            rest_pagenated_reserves = pagenated_reserves[1:]
+            print(first_pagenated_reserves)
             context= {
                 'user' : user,
                 'host_contents' : host_contents,
@@ -281,7 +283,8 @@ def mypage(request):
                 'remain_reserves_len' : remain_reserves_len,
                 'percent' : percent,
                 'canceled_reserves_len' : canceled_reserves_len,
-                'pagenated_reserves' : pagenated_reserves,
+                'first_pagenated_reserves' : first_pagenated_reserves,
+                'rest_pagenated_reserves' : rest_pagenated_reserves,
                 'host_faqs' : host_faqs,
             }
             return render(request, 'mypage.html', context)
