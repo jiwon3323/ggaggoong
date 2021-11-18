@@ -27,7 +27,7 @@ def logout(request):
     if request.method == 'GET':
         auth.logout(request)
         redirect('home')
-    return render(request,'home.html')
+    return redirect('home')
 
 def home(request):
     host_flag = False
