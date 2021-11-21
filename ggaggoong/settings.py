@@ -22,10 +22,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=7had+k+1uv9yr0o@=(##n=afd_++^_hu_)jg3h1)4_$h#1j!r'
-
+# SECRET_KEY = 'django-insecure-=7had+k+1uv9yr0o@=(##n=afd_++^_hu_)jg3h1)4_$h#1j!r'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-=7had+k+1uv9yr0o@=(##n=afd_++^_hu_)jg3h1)4_$h#1j!r')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = (os.environ.get('DEBUG','True') != 'False')
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+AWS_ACCESS_KEY_ID = 'AKIA4ZFKCKNJQD5GR6HO'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'ggaggoong'
+AWS_S3_REGION_NAME = 'ap-northeast-2'
+
 
 ALLOWED_HOSTS = ['*']
 
@@ -45,6 +53,8 @@ INSTALLED_APPS = [
     'content',
     'faq',
     'django.contrib.humanize',
+    'storages',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

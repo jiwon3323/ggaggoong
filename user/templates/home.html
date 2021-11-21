@@ -32,25 +32,33 @@
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">까꿍이란</a>
+            <a class="nav-link" aria-current="page" href="#aboutGgaggoong">까꿍이란</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">놀이 둘러보기</a>
+            <a class="nav-link" href="#hotContents">인기 놀이</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#allContents">놀이 둘러보기</a>
+          </li>
+          {% if user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'mypage' %}">마이페이지</a>
           </li>
+          {% endif %}
             
         </ul>
+        {% if user.is_authenticated %}
         {% if host_flag %} 
+        <a href="{% url 'Content:content_make' %}" style="padding-right:1rem"><button type="button" class="btn btn-light float-right">놀이 만들기</button></a>
         {% else %}
-        <a href="{% url 'host_signup' %}" style="padding-right:0.2rem"><button type="button" class="btn btn-light float-right">호스트 가입하기</button></a>
+        <a href="{% url 'host_signup' %}" style="padding-right:1rem"><button type="button" class="btn btn-light float-right">호스트 가입하기</button></a>
+        {% endif %}
         {% endif %}
         {% if user.is_authenticated %}
         <a href="{% url 'logout' %}" style="padding-right:1rem"><button type="button" class="btn btn-light float-right">로그아웃</button></a>
         <a href="{% url 'mypage' %}" style="padding-right:0.2rem"><button type="button" class=" btn btn-light float-right" name="action">마이페이지</button></a>
         {% else %}
-        <a href="{% url 'signup' %}" style="padding-right:1rem"><button class="button btn btn-light float-right" name="action">회원가입</button></a>
+        <a href="{% url 'signup' %}" style="padding-right:1rem"><button class="btn btn-light float-right" name="action">회원가입</button></a>
         <a href="{% url 'login' %}" style="padding-right:0.2rem"><button type="button" class="btn btn-light float-right">로그인</button></a>
         {% endif %}
         
@@ -61,7 +69,6 @@
     </div>
   </nav>
 
-    <div style="padding-left: 50px; padding-right:50px;">
     <head>
         <style>
             .bd-placeholder-img {
@@ -112,10 +119,11 @@
   </head>
   <body>
 
-<main>
+
+<div data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
 {% load static %}
-<div class="container_1 bg-image" style="background-image: url({% static 'baby_bck.jpeg' %}); background-position: center; background-repeat: no-repeat; background-size: cover;">
-    <h2>안녕하세요 까꿍입니다. <br>
+<div id="aboutGgaggoong" class="container_1 bg-image" style="background-image: url({% static 'baby_bck.jpeg' %}); background-position: center; background-repeat: no-repeat; background-size: cover;">
+    <h2 >안녕하세요 까꿍입니다. <br>
         아이들에게는 새로운 놀이터를 <br>
         고객님께는 새로운 쉼터를 제공해드립니다. <br>
         까꿍을 통해 놀라운 경험들을 접해보세요.
@@ -128,7 +136,7 @@
 </div>
 
   
-  <div class="container marketing">
+  <div id="hotContents" class="container marketing">
     <h1 style="padding-bottom: 2rem;"><div align="left">Hot Contents</div></h1> 
     <hr class="featurette-divider">
     <!-- Three columns of text below the carousel -->
@@ -165,9 +173,8 @@
 
   </div><!-- /.container -->
 
-    <div class="container marketing">
+    <div id="allContents" class="container marketing">
         <h1 style="padding-bottom: 2rem;"><div align="left">All Contents</div></h1>
-        <hr class="featurette-divider">
         {% for content in contents %}
         <hr class="featurette-divider">
 
@@ -179,7 +186,7 @@
                 <a href="{% url 'Content:content_detail' content.id %}" class="btn btn-primary">더 알아보기</a>
             </div>
             <div class="col-md-5">
-                <img class="bd-placeholder-img rounded-circle" width="300" height="300" src="{{ content.title_img.url }}" />
+                <img class="bd-placeholder-img" width="300" height="300" src="{{ content.title_img.url }}" />
 
             </div>
         </div>
@@ -187,7 +194,7 @@
     </div>
 
 
-</main>
+</div>
 
 
     <script src="/docs/5.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
@@ -237,17 +244,11 @@
   </div>
   <!-- Grid container -->
 
-  <!-- Copyright -->
-  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-    © 2020 Copyright:
-    <a class="text-dark" href="https://mdbootstrap.com/">MDBootstrap.com</a>
-  </div>
-  <!-- Copyright -->
 </footer>
 
 
 
-</body>
+
 </html>
 
 

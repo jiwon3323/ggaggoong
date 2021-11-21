@@ -85,7 +85,13 @@
                                             </div>
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ remain_reserves_len }} 개</div>
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">
+                                                        {% if remain_reserves_len %}
+                                                        {{ remain_reserves_len }} 개
+                                                        {% else %}
+                                                        예약 한게 없습니다
+                                                        {% endif %}
+                                                    </div>
                                                 </div>
                                                 <!-- <div class="col">
                                                     <div class="progress progress-sm mr-2">
@@ -113,7 +119,13 @@
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                 내가 취소한 놀이
                                             </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{canceled_reserves_len}} 개</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                {% if canceled_reserves_len %}
+                                                {{canceled_reserves_len}} 개
+                                                {% else %}
+                                                예약 한게 없습니다
+                                                {% endif %}
+                                            </div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-comments fa-2x text-gray-300"></i>
@@ -139,7 +151,7 @@
 
                             
                                 <!-- Card Body -->
-                                <div class="card-body">
+                                <div class="card-body" style="height: 18rem;">
                                     <div class="chart-area">
 
                                         <div id="recipeCarousel" class="carousel slide w-80" data-ride="carousel" >
@@ -204,6 +216,85 @@
 
                             </div>
                         </div>
+
+                        {% if host_flag %}
+                        <div class="col-xl-12 col-lg-12">
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">우리 아기 예약들</h6>
+                                </div>
+
+                            
+                                <!-- Card Body -->
+                                <div class="card-body" style="height: 18rem;">
+                                    <div class="chart-area">
+
+                                        <div id="recipeCarousel" class="carousel slide w-80" data-ride="carousel" >
+                                            <div class="carousel-inner w-100" role="listbox" style="padding-left:5%; padding-right:5%">
+                                                {% for pagenated_reserve in host_pagenated_reserves%}
+                                    
+                                                <div class="carousel-item row no-gutters active" >
+                                    
+                                                    {% for reserve in pagenated_reserve %}
+                                    
+                                                    <div class="col-4 float-left">
+                                                        <div class="card">
+                                                            <div class="card-body" >
+                                                                <img src="{{ reserve.content_id.title_img.url }}" class="card-img-top" style="height: 5rem; "/>
+                                                                <h5 class="card-title">{{reserve.content_id.title_name}}</h5>
+                                                                <p class="card-text">{{reserve.content_id.sub_title_name}}</p>
+                                                                <a href="{% url 'Content:content_detail' reserve.content_id.id %}" class="btn btn-primary">더 알아보기</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                                {% endfor %}
+                                    
+                                    
+                                                {% for pagenated_reserve in rest_pagenated_reserves%}
+                                    
+                                                <div class="carousel-item row no-gutters" >
+                                                        
+                                                        {% for reserve in pagenated_reserve %}
+                                                        <div class="col-4 float-left">
+                                                                <div class="card" >
+                                                                    <div class="card-body">
+                                                                        <img src="{{ reserve.content_id.title_img.url }}" class="card-img-top" style="height: 5rem;"/>
+                                                                        <h5 class="card-title">{{reserve.content_id.title_name}}</h5>
+                                                                        <p class="card-text">{{reserve.content_id.sub_title_name}}</p>
+                                                                        <a href="{% url 'Content:content_detail' reserve.content_id.id %}" class="btn btn-primary">더 알아보기</a>
+                                                                    </div>
+                                                                </div>
+                                                        </div>
+                                                        {% endfor %}
+                                                        
+                                                        
+                                                    
+                                                </div>
+                                                {% endfor %}
+                                    
+                                            </div>
+                                            <a class="carousel-control-prev" href="#recipeCarousel" role="button" data-slide="prev" style="height:3rem; width: 3rem; margin-top:6rem;">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="sr-only">Previous</span>
+                                            </a>
+                                            <a class="carousel-control-next" href="#recipeCarousel" role="button" data-slide="next" style="height:3rem; width: 3rem; margin-top:6rem;">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="sr-only" >Next</span>
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        {% endif %}
+
 
                         <!-- Pie Chart -->
                         <div class="col-xl-6 col-lg-6">

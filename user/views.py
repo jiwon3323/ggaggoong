@@ -222,6 +222,13 @@ def mypage(request):
             count_per_page = 3
             pagenated_reserves = [reserves[i * count_per_page:(i+1) * count_per_page] for i in range((len(reserves) + count_per_page - 1) // count_per_page) ]
 
+            try:
+                host_pagenated_reserves = [host_contents[i * count_per_page:(i+1) * count_per_page] for i in range((len(host_contents) + count_per_page - 1) // count_per_page) ]
+            except:
+                host_pagenated_reserves = None
+            # print('asdfadsjkfnasdkvnak')
+            # print(host_pagenated_reserves)
+            # print('asdfadsjkfnasdkvnak')
 
 
             total_reserve_price = 0
@@ -262,6 +269,8 @@ def mypage(request):
             except:
                 host_contents = None
                 host_faqs = None
+
+
             remain_reserves_len = len(remain_reserves)
             percent = (remain_reserves_len / reserves_len) * 100
             canceled_reserves_len = len(canceled_reserves)
@@ -286,6 +295,7 @@ def mypage(request):
                 'first_pagenated_reserves' : first_pagenated_reserves,
                 'rest_pagenated_reserves' : rest_pagenated_reserves,
                 'host_faqs' : host_faqs,
+                # 'host_pagenated_reserves' : host_pagenated_reserves,
             }
             return render(request, 'mypage.html', context)
         except:

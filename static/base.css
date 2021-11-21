@@ -7,7 +7,7 @@ td {
 }
 
 .reserve{
-margin-top : 10px;
+padding-top : 5rem !important;
 }
 
 .detail {
@@ -17,3 +17,13 @@ margin-top : 5px;
 .sub{
 margin-bottom : 30px;
 }
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: red;
+    color: white;
+    text-align: center;
+  }

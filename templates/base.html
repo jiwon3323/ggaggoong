@@ -33,14 +33,19 @@
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">까꿍이란</a>
+            <a class="nav-link" aria-current="page" href="{% url 'home' %}#aboutGgaggoong">까꿍이란</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">놀이 둘러보기</a>
+            <a class="nav-link" href="{% url 'home' %}#hotContents">인기 놀이</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'home' %}#allContents">놀이 둘러보기</a>
+          </li>
+          {% if user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'mypage' %}">마이페이지</a>
           </li>
+          {% endif %}
             
         </ul>
         {% if user.is_authenticated %}
@@ -63,7 +68,7 @@
     </div>
 
 
-<footer class="bg-light text-center text-lg-start">
+<footer class="footer bg-light mt-auto py-3 text-center text-lg-start">
   <!-- Grid container -->
   <div class="container p-4">
     <!--Grid row-->
@@ -100,11 +105,6 @@
   </div>
   <!-- Grid container -->
 
-  <!-- Copyright -->
-  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-    © 2020 Copyright:
-    <a class="text-dark" href="https://mdbootstrap.com/">MDBootstrap.com</a>
-  </div>
   <!-- Copyright -->
 </footer>
 
